@@ -1,6 +1,6 @@
 <h1>ExpNo 4 : Implement A* search algorithm for a Graph</h1> 
-<h3>Name:       </h3>
-<h3>Register Number:           </h3>
+<h3>Name: GIFTSON RAJARATHINAM N   </h3>
+<h3>Register Number: 212222233002          </h3>
 <H3>Aim:</H3>
 <p>To ImplementA * Search algorithm for a Graph using Python 3.</p>
 <H3>Algorithm:</H3>
@@ -49,6 +49,98 @@
     end (while loop)
 
 ``````
+
+<hr>
+<h2>Program </h2>
+<hr>
+
+```
+from collections import defaultdict
+
+H_dist = {}
+
+def aStarAlgo(start_node, stop_node):
+    open_set = set([start_node])  
+    closed_set = set()
+    g = {}  
+    parents = {}  
+    
+    g[start_node] = 0
+   
+    parents[start_node] = start_node
+
+    while len(open_set) > 0:
+        n = None
+        for v in open_set:
+            if n is None or g[v] + heuristic(v) < g[n] + heuristic(n):
+                n = v
+
+        if n is None: 
+            print('Path does not exist!')
+            return None
+        
+        if n == stop_node:
+            path = []
+            while parents[n] != n:
+                path.append(n)
+                n = parents[n]
+            path.append(start_node)
+            path.reverse()
+            print('Path found: {}'.format(path))
+            return path
+
+
+        open_set.remove(n)
+        closed_set.add(n)
+
+        for (m, weight) in get_neighbors(n):
+            if m not in open_set and m not in closed_set:
+                open_set.add(m)
+                parents[m] = n
+                g[m] = g[n] + weight
+            else:
+                if g[m] > g[n] + weight:
+                    # Update g(m)
+                    g[m] = g[n] + weight
+                    # Change parent of m to n
+                    parents[m] = n
+                    # If m in closed set, remove and add to open
+                    if m in closed_set:
+                        closed_set.remove(m)
+                        open_set.add(m)
+
+    print('Path does not exist!')
+    return None
+
+# Define function to return neighbor and its distance from the passed node
+def get_neighbors(v):
+    return graph[v] if v in graph else []  # Return empty list if node has no neighbors
+
+def heuristic(n):
+    return H_dist[n] if n in H_dist else float('inf')  # Return heuristic value or inf if not found
+
+# Describe your graph here
+graph = defaultdict(list)
+n, e = map(int, input("Enter number of nodes and edges: ").split())
+for i in range(e):
+    u, v, cost = map(str, input("Enter edge (u v cost): ").split())
+    t = (v, float(cost))
+    graph[u].append(t)
+    t1 = (u, float(cost))
+    graph[v].append(t1)
+
+for i in range(n):
+    node, h = map(str, input("Enter node and heuristic value: ").split())
+    H_dist[node] = float(h)
+
+print("Heuristic Distances:", H_dist)
+print("Graph Structure:", dict(graph))
+
+# Run the A* algorithm
+start = input("Enter start node: ")
+goal = input("Enter goal node: ")
+aStarAlgo(start, goal)
+```
 
 <hr>
 <h2>Sample Graph I</h2>
